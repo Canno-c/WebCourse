@@ -123,7 +123,7 @@
       transform: scale(1.05);
     }
 
-    /* Upscale grid of lesson cards */
+    /* Upscale grid of lesson cards with photos */
     h2.section-title {
       text-align: center;
       font-family: 'Montserrat', sans-serif;
@@ -158,33 +158,15 @@
     }
 
     .card-image {
+      width: 100%;
       height: 140px;
-      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      overflow: hidden;
     }
 
-    .card-image::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      right: -10px;
-      width: 80px;
-      height: 80px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png') no-repeat;
-      background-size: 80px 80px;
-      opacity: 0.1;
-      transform: rotate(15deg);
-    }
-
-    .card-image h3 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.25rem;
-      color: var(--color-white);
-      margin: 0;
-      z-index: 1;
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .card-body {
@@ -283,9 +265,10 @@
   <!-- Upscale Grid of Lesson Cards -->
   <h2 class="section-title">📚 Course Lesson Previews</h2>
   <div class="grid-wrapper">
+    <!-- Card 1 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 1</h3>
+        <img src="https://via.placeholder.com/400x200?text=Germination" alt="Germination photo" />
       </div>
       <div class="card-body">
         <p><strong>Germination Basics</strong><br>
@@ -296,9 +279,10 @@
       </div>
     </div>
 
+    <!-- Card 2 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 2</h3>
+        <img src="https://via.placeholder.com/400x200?text=Grow+Space" alt="Grow space photo" />
       </div>
       <div class="card-body">
         <p><strong>Grow Space Setup</strong><br>
@@ -309,9 +293,10 @@
       </div>
     </div>
 
+    <!-- Card 3 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 3</h3>
+        <img src="https://via.placeholder.com/400x200?text=Lighting+%26+Ventilation" alt="Lighting and ventilation photo" />
       </div>
       <div class="card-body">
         <p><strong>Lighting & Ventilation</strong><br>
@@ -322,9 +307,10 @@
       </div>
     </div>
 
+    <!-- Card 4 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 4</h3>
+        <img src="https://via.placeholder.com/400x200?text=Seedling+Stage" alt="Seedling stage photo" />
       </div>
       <div class="card-body">
         <p><strong>Seedling Stage</strong><br>
@@ -335,9 +321,10 @@
       </div>
     </div>
 
+    <!-- Card 5 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 5</h3>
+        <img src="https://via.placeholder.com/400x200?text=Vegetative+Growth" alt="Vegetative growth photo" />
       </div>
       <div class="card-body">
         <p><strong>Vegetative Growth</strong><br>
@@ -348,9 +335,10 @@
       </div>
     </div>
 
+    <!-- Card 6 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 6</h3>
+        <img src="https://via.placeholder.com/400x200?text=Pre-Flower+%26+Stretch" alt="Pre-Flower and Stretch photo" />
       </div>
       <div class="card-body">
         <p><strong>Pre-Flower & Stretch</strong><br>
@@ -361,9 +349,10 @@
       </div>
     </div>
 
+    <!-- Card 7 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 7</h3>
+        <img src="https://via.placeholder.com/400x200?text=Flowering+Phase" alt="Flowering phase photo" />
       </div>
       <div class="card-body">
         <p><strong>Flowering Phase</strong><br>
@@ -374,9 +363,10 @@
       </div>
     </div>
 
+    <!-- Card 8 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 8</h3>
+        <img src="https://via.placeholder.com/400x200?text=Harvesting" alt="Harvesting photo" />
       </div>
       <div class="card-body">
         <p><strong>Harvesting</strong><br>
@@ -387,9 +377,10 @@
       </div>
     </div>
 
+    <!-- Card 9 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 9</h3>
+        <img src="https://via.placeholder.com/400x200?text=Drying+%26+Curing" alt="Drying and Curing photo" />
       </div>
       <div class="card-body">
         <p><strong>Drying & Curing</strong><br>
@@ -400,9 +391,10 @@
       </div>
     </div>
 
+    <!-- Card 10 -->
     <div class="card">
       <div class="card-image">
-        <h3>Lesson 10</h3>
+        <img src="https://via.placeholder.com/400x200?text=Storage+%26+Troubleshoot" alt="Storage and Troubleshoot photo" />
       </div>
       <div class="card-body">
         <p><strong>Storage & Troubleshoot</strong><br>
