@@ -24,18 +24,6 @@
     }
     
 
-    .smoke-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: 0;
-  opacity: 0.2;
-  pointer-events: none;
-}
-
 
     @keyframes fadeInUp {
       0% { opacity: 0; transform: translateY(30px); }
@@ -178,14 +166,25 @@
       color: #333;
     }
 
-    .gradient-overlay {
+    .smoke-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2; /* ✅ Behind everything */
+  pointer-events: none;
+}
+
+.gradient-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background: linear-gradient(120deg, rgba(0,0,0,0.85), rgba(60,0,0,0.6));
-  z-index: 0;
+  z-index: -1; /* ✅ On top of smoke, but behind content */
   pointer-events: none;
 }
 
@@ -193,8 +192,8 @@
   </style>
 </head>
 <body>
-  <div class="smoke-background"></div>
-  <video autoplay muted loop playsinline class="smoke-background">
+  <div class="smoke-video"></div>
+  <video autoplay muted loop playsinline class="smoke-video">
   <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
 </video>
 
