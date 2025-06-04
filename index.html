@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,15 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Grow Ops 101 – From Seed to Smoke</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Quicksand&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Quicksand&family=Montserrat:wght@500;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --color-primary: #234d20;
+      --color-accent: #34a853;
+      --color-white: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --shadow-strong: rgba(0, 0, 0, 0.15);
+    }
+
     body {
       font-family: 'Quicksand', sans-serif;
       margin: 0;
       background: linear-gradient(-45deg, #e1f7e7, #d0f0de, #f4f9f4, #c8f0f5);
       background-size: 400% 400%;
       animation: gradientShift 15s ease infinite;
-      color: #234d20;
+      color: var(--color-primary);
+      overflow-x: hidden;
     }
 
     @keyframes gradientShift {
@@ -22,15 +31,37 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    
 
+    /* Smoke video background */
+    .smoke-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    /* Dark gradient overlay */
+    .gradient-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(120deg, rgba(0,0,0,0.85), rgba(60,0,0,0.6));
+      z-index: -1;
+      pointer-events: none;
+    }
 
     @keyframes fadeInUp {
       0% { opacity: 0; transform: translateY(30px); }
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    header, .modules, .testimonials {
+    header, .grid-wrapper, .testimonials, footer {
       position: relative;
       z-index: 1;
     }
@@ -57,16 +88,16 @@
       opacity: 0;
     }
 
+    @keyframes floatLeaf {
+      0% { transform: translateY(0px); opacity: 1; }
+      100% { transform: translateY(-50px); opacity: 0.3; }
+    }
+
     .leaf {
       position: absolute;
       width: 40px;
       animation: floatLeaf 8s infinite linear alternate;
       opacity: 0.4;
-    }
-
-    @keyframes floatLeaf {
-      0% { transform: translateY(0px); opacity: 1; }
-      100% { transform: translateY(-50px); opacity: 0.3; }
     }
 
     .leaf1 { top: 60%; left: 15%; animation-delay: 0s; }
@@ -78,12 +109,13 @@
       margin-top: 2rem;
       padding: 1rem 2rem;
       font-size: 1.2rem;
-      background-color: #34a853;
-      color: white;
+      background-color: var(--color-accent);
+      color: var(--color-white);
       border-radius: 50px;
       text-decoration: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
+      font-weight: 600;
     }
 
     .cta-button:hover {
@@ -91,69 +123,72 @@
       transform: scale(1.05);
     }
 
-    .modules {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      max-width: 1200px;
-      margin: 4rem auto 2rem;
-      padding: 0 1rem;
-    }
-
-    {
-      font-family: 'Quicksand', sans-serif;
-      background: #f4f9f4;
-      color: #234d20;
-      margin: 0;
-      padding: 2rem;
-    }
-
-    h2 {
+    /* Upscale grid of lesson cards */
+    h2.section-title {
       text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem;
     }
 
     .grid-wrapper {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 0 auto 3rem;
+      padding: 0 1rem;
     }
 
-    .grid-card {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px var(--shadow-light);
       overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
     }
 
-    .grid-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px var(--shadow-strong);
     }
 
-    .card-header {
-      padding: 0.75rem 1rem;
-      background: #34a853;
-      color: #fff;
-      font-weight: bold;
-      font-size: 1rem;
+    .card-image {
+      height: 140px;
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
 
-    .card-header span {
-      display: inline-block;
-      margin-right: 0.5rem;
-      font-size: 1.2rem;
+    .card-image::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      width: 80px;
+      height: 80px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png') no-repeat;
+      background-size: 80px 80px;
+      opacity: 0.1;
+      transform: rotate(15deg);
+    }
+
+    .card-image h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.25rem;
+      color: var(--color-white);
+      margin: 0;
+      z-index: 1;
     }
 
     .card-body {
-      padding: 1rem;
+      padding: 1rem 1.25rem;
       flex-grow: 1;
     }
 
@@ -161,11 +196,42 @@
       margin: 0;
       font-size: 0.95rem;
       line-height: 1.4;
+      color: #333;
+    }
+
+    .card-footer {
+      padding: 0.75rem 1.25rem;
+      background: #f1f1f1;
+      text-align: right;
+    }
+
+    .card-footer a {
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      color: var(--color-accent);
+      position: relative;
+    }
+
+    .card-footer a::after {
+      content: '→';
+      margin-left: 0.25rem;
+      transition: margin-left 0.2s ease;
+    }
+
+    .card-footer a:hover::after {
+      margin-left: 0.5rem;
     }
 
     @media (max-width: 600px) {
-      h2 {
-        font-size: 1.5rem;
+      h2.section-title {
+        font-size: 1.6rem;
+      }
+      header h1 {
+        font-size: 2.5rem;
+      }
+      header p {
+        font-size: 1rem;
       }
     }
 
@@ -177,12 +243,15 @@
 
     .testimonials h2 {
       margin-bottom: 2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
     }
 
     .testimonial {
       max-width: 600px;
       margin: 1rem auto;
       font-style: italic;
+      color: #444;
     }
 
     footer {
@@ -192,79 +261,160 @@
       font-size: 0.85rem;
       color: #333;
     }
-
-    .smoke-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -2; /* ✅ Behind everything */
-  pointer-events: none;
-}
-
-.gradient-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(120deg, rgba(0,0,0,0.85), rgba(60,0,0,0.6));
-  z-index: -1; /* ✅ On top of smoke, but behind content */
-  pointer-events: none;
-}
-
-
   </style>
 </head>
 <body>
-  <div class="smoke-video"></div>
+  <!-- Smoke video and gradient -->
   <video autoplay muted loop playsinline class="smoke-video">
-  <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
-</video>
+    <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
+  </video>
+  <div class="gradient-overlay"></div>
 
-<div class="gradient-overlay"></div>
-
-
+  <!-- Header / Hero -->
   <header>
     <h1>🌿 Grow Ops 101: From Seed to Smoke</h1>
     <p>Learn to grow top-shelf cannabis at home — step-by-step, no fluff, just fire.</p>
     <a href="lesson1.html" class="cta-button">🚀 Start Lesson 1</a>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png?20220212181746" class="leaf leaf1" />
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png?20220212181746" class="leaf leaf2" />
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png?20220212181746" class="leaf leaf3" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" class="leaf leaf1" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" class="leaf leaf2" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" class="leaf leaf3" />
   </header>
 
-  <section class="modules">
-    <h1>📚 Course Lesson Previews</h1>
+  <!-- Upscale Grid of Lesson Cards -->
+  <h2 class="section-title">📚 Course Lesson Previews</h2>
   <div class="grid-wrapper">
-    <div class="grid-card">
-      <div class="card-header"><span>🌱</span>Lesson 1</div>
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 1</h3>
+      </div>
       <div class="card-body">
-        <p>Germination</p>
-        <p>Sprouting seeds the right way. Learn essential germination methods and avoid common mistakes.</p>
+        <p><strong>Germination Basics</strong><br>
+        Sprouting seeds the right way—learn essential methods and avoid common mistakes.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson1.html">Learn More</a>
       </div>
     </div>
 
-    <div class="grid-card">
-      <div class="card-header"><span>🏗️</span>Lesson 2: Lighting & Ventilation</div>
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 2</h3>
+      </div>
       <div class="card-body">
-        <p>Master the core systems that power healthy cannabis growth. This lesson breaks down light types, spectrums, and schedules, along with proper ventilation setups to maintain airflow, control temperature, and prevent mold—ensuring your plants thrive from seed to harvest.</p>
+        <p><strong>Grow Space Setup</strong><br>
+        Create a functional grow area: lighting, airflow, temperature, humidity control.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson2.html">Learn More</a>
       </div>
     </div>
 
-    <div class="card"><h3>Lesson 2</h3><p>Grow Space Setup - Discover how to create a functional and efficient grow space tailored to your needs. This lesson covers indoor vs. outdoor setups, lighting, airflow, temperature, humidity control, and space optimization—everything you need to give your plants the best start possible.</p></div>
-    <div class="card"><h3>Lesson 3</h3><p>Lighting & Ventilation - Master the core systems that power healthy cannabis growth. This lesson breaks down light types, spectrums, and schedules, along with proper ventilation setups to maintain airflow, control temperature, and prevent mold—ensuring your plants thrive from seed to harvest.</p></div>
-    <div class="card"><h3>Lesson 4</h3><p>Seedling Stage - Learn how to care for your cannabis seedlings during their most delicate phase. This lesson covers light intensity, watering techniques, humidity levels, and common mistakes to avoid—helping you grow strong, resilient plants right from the start.</p></div>
-    <div class="card"><h3>Lesson 5</h3><p>Veg Growth - Unlock the secrets to explosive cannabis growth during the veg stage. This lesson covers lighting schedules, nutrient needs, training techniques, and environmental control—everything you need to shape healthy, bushy plants ready to flower.</p></div>
-    <div class="card"><h3>Lesson 6</h3><p>Pre-Flower & Stretch - Prepare your plants for the flowering stage by mastering the pre-flower and stretch period. This lesson covers identifying plant sex, adjusting light schedules, managing rapid vertical growth, and setting the stage for optimal bud production.</p></div>
-    <div class="card"><h3>Lesson 7</h3><p>Flowering Stage - Dive into the most exciting phase of the grow cycle—flowering. This lesson covers light timing, nutrient shifts, humidity control, and how to support heavy buds while avoiding issues like mold or nutrient burn. Get ready for resin, aroma, and serious growth.</p></div>
-    <div class="card"><h3>Lesson 8</h3><p>Harvesting - Learn when and how to harvest your cannabis for peak potency and flavor. This lesson covers identifying ripeness by trichomes, proper cutting techniques, and how to handle your plants to preserve those precious cannabinoids and terpenes.</p></div>
-    <div class="card"><h3>Lesson 9</h3><p>Drying & Curing - Discover the critical post-harvest steps that make or break your final product. This lesson teaches you how to dry your buds properly, cure them for maximum flavor and smoothness, and avoid common mistakes that can ruin months of hard work.</p></div>
-    <div class="card"><h3>Lesson 10</h3><p>Storage & Troubleshooting - Learn how to store your cannabis to preserve potency and flavor long-term, and how to troubleshoot common grow issues. This lesson covers proper containers, humidity control, and solutions for problems like pests, mold, and nutrient deficiencies—so you stay ready for anything.</p></div>
-  </section>
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 3</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Lighting & Ventilation</strong><br>
+        Optimize light spectrum & air circulation to keep plants healthy from seed to harvest.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson3.html">Learn More</a>
+      </div>
+    </div>
 
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 4</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Seedling Stage</strong><br>
+        Care for delicate seedlings: humidity, watering, and avoiding transplant shock.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson4.html">Learn More</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 5</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Vegetative Growth</strong><br>
+        Train, trim, and feed during veg—shape bushy plants and manage nutrients.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson5.html">Learn More</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 6</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Pre-Flower & Stretch</strong><br>
+        Identify plant sex, adjust light schedules, and prepare for the bud surge.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson6.html">Learn More</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 7</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Flowering Phase</strong><br>
+        Manage bloom nutrients, control humidity, and support heavy buds without mold.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson7.html">Learn More</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 8</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Harvesting</strong><br>
+        Know when to cut: identify peak trichomes, use proper techniques to preserve potency.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson8.html">Learn More</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 9</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Drying & Curing</strong><br>
+        Dry buds evenly and cure to maximize flavor, smoothness, and shelf-life.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson9.html">Learn More</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <h3>Lesson 10</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Storage & Troubleshoot</strong><br>
+        Store properly to preserve cannabinoids and fix common grow issues like pests or mold.</p>
+      </div>
+      <div class="card-footer">
+        <a href="lesson10.html">Learn More</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
   <section class="testimonials">
     <h2>What Our Growers Say</h2>
     <div class="testimonial">"I went from killing houseplants to pulling a QP per run — thanks to Grow Ops 101." – Jaytonio S.</div>
@@ -272,6 +422,7 @@
     <div class="testimonial">"Best grow resource online. Period." – Daryl M.</div>
   </section>
 
+  <!-- Footer -->
   <footer>
     &copy; 2025 Grow Ops 101. All rights reserved.
   </footer>
