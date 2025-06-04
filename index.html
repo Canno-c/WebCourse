@@ -149,6 +149,18 @@
       font-size: 0.85rem;
       color: #333;
     }
+
+    .overlay-dark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* Adjust darkness here */
+  z-index: 0;
+  pointer-events: none;
+}
+
   </style>
 </head>
 <body>
@@ -156,6 +168,7 @@
   <video autoplay muted loop playsinline class="smoke-background">
     <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
   </video>
+  <div class="overlay-dark"></div>
 
   <header>
     <h1>🌿 Grow Ops 101: From Seed to Smoke</h1>
