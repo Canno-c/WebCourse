@@ -150,25 +150,28 @@
       color: #333;
     }
 
-    .overlay-dark {
+    .gradient-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.4); /* Adjust darkness here */
+  background: linear-gradient(120deg, rgba(0,0,0,0.85), rgba(60,0,0,0.6));
   z-index: 0;
   pointer-events: none;
 }
+
 
   </style>
 </head>
 <body>
   <div class="smoke-background"></div>
   <video autoplay muted loop playsinline class="smoke-background">
-    <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
-  </video>
-  <div class="overlay-dark"></div>
+  <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
+</video>
+
+<div class="gradient-overlay"></div>
+
 
   <header>
     <h1>🌿 Grow Ops 101: From Seed to Smoke</h1>
