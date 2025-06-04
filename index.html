@@ -22,18 +22,20 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+    
 
     .smoke-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-      background: url('https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4') center center / cover no-repeat;
-      opacity: 0.2;
-    }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 
     @keyframes fadeInUp {
       0% { opacity: 0; transform: translateY(30px); }
@@ -151,6 +153,9 @@
 </head>
 <body>
   <div class="smoke-background"></div>
+  <video autoplay muted loop playsinline class="smoke-background">
+    <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
+  </video>
 
   <header>
     <h1>🌿 Grow Ops 101: From Seed to Smoke</h1>
