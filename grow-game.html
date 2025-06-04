@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grow Game – Keep Your Plant Alive!</title>
+  <style>
+    /* Global Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: linear-gradient(135deg, #d0f0de, #e1f7e7);
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Game Container */
+    #game {
+      position: relative;
+      width: 360px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: #234d20;
+      margin-bottom: 0.5rem;
+    }
+    /* Plant Pot */
+    #plant-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 1rem auto;
+      overflow: visible;
+    }
+    /* Pot Base */
+    #pot {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 160px;
+      height: 80px;
+      background: #8b5a2b;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      transform: translateX(-50%);
+    }
+    /* Soil */
+    #soil {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      width: 180px;
+      height: 40px;
+      background: #5c3a21;
+      border-radius: 0 0 20px 20px;
+      transform: translateX(-50%);
+    }
+    /* Plant Stem & Leaves */
+    #plant {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      width: 20px;
+      height: 0;
+      background: transparent;
+      transform: translateX(-50%);
+    }
+    /* Stem grows via dynamic height */
+    #stem {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 8px;
+      height: 0;
+      background: #32632d;
+      transform: translateX(-50%);
+      transition: height 0.5s ease;
+      border-radius: 4px 4px 0 0;
+    }
+    /* Leaves appear at stages */
+    .leaf {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: #3b7f3b;
+      opacity: 0;
+      transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
+    }
+    /* Left leaf */
+    #leaf-left {
+      bottom: 40px;
+      left: -10px;
+      transform: rotate(-45deg);
+    }
+    /* Right leaf */
+    #leaf-right {
+      bottom: 40px;
+      right: -10px;
+      transform: rotate(45deg);
+    }
+    /* Bud */
+    #bud {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: #6a2e2e;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
+    }
+    /* Resource Bars Container */
+    #resources {
+      margin-top: 1rem;
+      text-align: left;
+    }
+    .resource {
+      margin: 0.5rem 0;
+    }
+    .resource-label {
+      font-size: 0.9rem;
+      color: #234d20;
+      margin-bottom: 0.25rem;
+    }
+    .bar-bg {
+      width: 100%;
+      height: 14px;
+      background: #ddd;
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      width: 100%;
+      height: 100%;
+      background: #34a853;
+      border-radius: 7px;
+      transition: width 0.3s ease;
+    }
+    /* Control Buttons */
+    #controls {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-around;
+    }
+    .btn {
+      background: #34a853;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn:hover {
+      background: #2e7d32;
+      transform: translateY(-2px);
+    }
+    /* Game Over Overlay */
+    #game-over {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      border-radius: 16px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      text-align: center;
+      padding: 1rem;
+    }
+    #game-over.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h1>🌱 Grow Your Plant!</h1>
+    <div id="plant-container">
+      <div id="pot"></div>
+      <div id="soil"></div>
+      <div id="plant">
+        <div id="stem"></div>
+        <div id="leaf-left" class="leaf"></div>
+        <div id="leaf-right" class="leaf"></div>
+        <div id="bud"></div>
+      </div>
+    </div>
+    <div id="resources">
+      <div class="resource">
+        <div class="resource-label">💧 Water</div>
+        <div class="bar-bg"><div id="water-bar" class="bar-fill"></div></div>
+      </div>
+      <div class="resource">
+        <div class="resource-label">💡 Light</div>
+        <div class="bar-bg"><div id="light-bar" class="bar-fill"></div></div>
+      </div>
+      <div class="resource">
+        <div class="resource-label">🌿 Nutrients</div>
+        <div class="bar-bg"><div id="nutrient-bar" class="bar-fill"></div></div>
+      </div>
+    </div>
+    <div id="controls">
+      <button id="btn-water" class="btn">Water 💧</button>
+      <button id="btn-light" class="btn">Light 💡</button>
+      <button id="btn-nutrient" class="btn">Feed 🌿</button>
+    </div>
+    <div id="game-over">💀 Your plant has died!<br>Refresh to try again.</div>
+  </div>
+
+  <script>
+    // Initial resource values (percentage)
+    let water = 100;
+    let light = 100;
+    let nutrients = 100;
+    // Game state
+    let growthStage = 0; // 0 = seed, 1 = sprout, 2 = small plant, 3 = budding
+    let isGameOver = false;
+
+    // DOM Elements
+    const waterBar = document.getElementById('water-bar');
+    const lightBar = document.getElementById('light-bar');
+    const nutrientBar = document.getElementById('nutrient-bar');
+    const stem = document.getElementById('stem');
+    const leafLeft = document.getElementById('leaf-left');
+    const leafRight = document.getElementById('leaf-right');
+    const bud = document.getElementById('bud');
+    const gameOverOverlay = document.getElementById('game-over');
+
+    // Buttons
+    document.getElementById('btn-water').addEventListener('click', () => {
+      if (!isGameOver) water = Math.min(water + 20, 100);
+    });
+    document.getElementById('btn-light').addEventListener('click', () => {
+      if (!isGameOver) light = Math.min(light + 20, 100);
+    });
+    document.getElementById('btn-nutrient').addEventListener('click', () => {
+      if (!isGameOver) nutrients = Math.min(nutrients + 20, 100);
+    });
+
+    // Update resource bars
+    function updateBars() {
+      waterBar.style.width = water + '%';
+      lightBar.style.width = light + '%';
+      nutrientBar.style.width = nutrients + '%';
+
+      // Change bar colors based on level
+      [waterBar, lightBar, nutrientBar].forEach((bar, idx) => {
+        let val = [water, light, nutrients][idx];
+        let color = val > 60 ? '#34a853' : val > 30 ? '#f0ad4e' : '#d9534f';
+        bar.style.background = color;
+      });
+    }
+
+    // Check for game over
+    function checkGameOver() {
+      if (water <= 0 || light <= 0 || nutrients <= 0) {
+        isGameOver = true;
+        gameOverOverlay.classList.add('show');
+      }
+    }
+
+    // Grow plant based on stage
+    function growPlant() {
+      if (growthStage === 0 && water > 50 && light > 50 && nutrients > 50) {
+        // Stage 1: Sprout
+        stem.style.height = '60px';
+        growthStage = 1;
+      } else if (growthStage === 1 && water > 60 && light > 60 && nutrients > 60) {
+        // Stage 2: Small plant with leaves
+        stem.style.height = '100px';
+        leafLeft.style.width = '40px';
+        leafLeft.style.height = '20px';
+        leafLeft.style.opacity = '1';
+        leafRight.style.width = '40px';
+        leafRight.style.height = '20px';
+        leafRight.style.opacity = '1';
+        growthStage = 2;
+      } else if (growthStage === 2 && water > 70 && light > 70 && nutrients > 70) {
+        // Stage 3: Bud
+        stem.style.height = '140px';
+        bud.style.width = '30px';
+        bud.style.height = '30px';
+        bud.style.opacity = '1';
+        growthStage = 3;
+      }
+    }
+
+    // Main game loop (runs every second)
+    function gameLoop() {
+      if (isGameOver) return;
+
+      // Decrease resources
+      water = Math.max(water - 1, 0);
+      light = Math.max(light - 1, 0);
+      nutrients = Math.max(nutrients - 1, 0);
+
+      updateBars();
+      checkGameOver();
+      growPlant();
+    }
+
+    // Start the loop
+    updateBars();
+    setInterval(gameLoop, 1000);
+  </script>
+</body>
+</html>
