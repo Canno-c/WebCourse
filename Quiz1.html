@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Quiz – Grow Ops 101</title>
+  <style>
+    /* ─── GLOBAL RESET & BASE STYLES ─────────────────────────────────────────── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: linear-gradient(135deg, #e1f7e7, #d0f0de);
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #quiz-container {
+      position: relative;
+      width: 360px;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: #234d20;
+      margin-bottom: 1rem;
+    }
+    /* ─── PROGRESS BAR ───────────────────────────────────────────────────────── */
+    #progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    #progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #34a853;
+      transition: width 0.5s ease;
+    }
+    /* ─── QUESTION CARD ──────────────────────────────────────────────────────── */
+    .question-card {
+      animation: fadeIn 0.5s ease;
+    }
+    .question-text {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 1rem;
+      min-height: 3rem;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    .options li {
+      margin: 0.5rem 0;
+    }
+    .option-button {
+      width: 100%;
+      padding: 0.6rem;
+      background: #fff;
+      border: 2px solid #34a853;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #234d20;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+    .option-button:hover {
+      background: #e1f7e7;
+      transform: scale(1.02);
+    }
+    .option-button.correct {
+      background: #34a853;
+      color: #fff;
+      border-color: #2c8e45;
+    }
+    .option-button.incorrect {
+      background: #d9534f;
+      color: #fff;
+      border-color: #c9302c;
+    }
+    /* ─── NEXT BUTTON ───────────────────────────────────────────────────────── */
+    #next-button {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: #34a853;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.3s ease, transform 0.1s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #next-button:hover {
+      background: #2c8e45;
+      transform: scale(1.02);
+    }
+    #next-button.show {
+      opacity: 1;
+      pointer-events: all;
+      animation: fadeIn 0.5s ease;
+    }
+    /* ─── SCORE SCREEN ───────────────────────────────────────────────────────── */
+    #score-screen {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    #score-screen h2 {
+      font-size: 1.2rem;
+      color: #234d20;
+      margin-bottom: 1rem;
+    }
+    #retry-button {
+      padding: 0.6rem 1.2rem;
+      background: #34a853;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+    #retry-button:hover {
+      background: #2c8e45;
+      transform: scale(1.02);
+    }
+    /* ─── ANIMATIONS ─────────────────────────────────────────────────────────── */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <h1>Grow Ops Quiz</h1>
+
+    <!-- Progress Bar -->
+    <div id="progress-bar">
+      <div id="progress-fill"></div>
+    </div>
+
+    <!-- Question Card -->
+    <div id="question-card" class="question-card">
+      <div id="question-text" class="question-text"></div>
+      <ul id="options" class="options"></ul>
+      <button id="next-button">Next →</button>
+    </div>
+
+    <!-- Score Screen -->
+    <div id="score-screen">
+      <h2 id="score-text"></h2>
+      <button id="retry-button">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    // ─── QUIZ DATA ───────────────────────────────────────────────────────────────
+    const quizQuestions = [
+      {
+        question: "1. What’s the ideal pH range for cannabis soil?",
+        options: [
+          { text: "4.5 – 5.5", correct: false },
+          { text: "5.8 – 6.5", correct: true },
+          { text: "6.8 – 7.5", correct: false },
+          { text: "7.5 – 8.0", correct: false }
+        ]
+      },
+      {
+        question: "2. During the vegetative stage, how many hours of light per day is recommended?",
+        options: [
+          { text: "12 hours", correct: false },
+          { text: "10 hours", correct: false },
+          { text: "18 hours", correct: true },
+          { text: "24 hours", correct: false }
+        ]
+      },
+      {
+        question: "3. Which nutrient is most important during the flowering stage?",
+        options: [
+          { text: "Nitrogen (N)", correct: false },
+          { text: "Phosphorus (P)", correct: true },
+          { text: "Potassium (K)", correct: false },
+          { text: "Calcium (Ca)", correct: false }
+        ]
+      },
+      {
+        question: "4. What does 'LST' stand for in cannabis training?",
+        options: [
+          { text: "Low-Stress Training", correct: true },
+          { text: "Light Spectrum Tuning", correct: false },
+          { text: "Leaf Shaping Technique", correct: false },
+          { text: "Lively Stem Treatment", correct: false }
+        ]
+      },
+      {
+        question: "5. When harvesting, which color of trichomes indicates peak THC?",
+        options: [
+          { text: "Clear", correct: false },
+          { text: "Amber", correct: true },
+          { text: "Bright white", correct: false },
+          { text: "Blue", correct: false }
+        ]
+      }
+      // Add more questions if desired
+    ];
+
+    // ─── STATE & ELEMENTS ────────────────────────────────────────────────────────
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    const questionCard = document.getElementById('question-card');
+    const questionText = document.getElementById('question-text');
+    const optionsList = document.getElementById('options');
+    const nextButton = document.getElementById('next-button');
+    const progressFill = document.getElementById('progress-fill');
+
+    const scoreScreen = document.getElementById('score-screen');
+    const scoreText = document.getElementById('score-text');
+    const retryButton = document.getElementById('retry-button');
+
+    // ─── INITIALIZE FIRST QUESTION ───────────────────────────────────────────────
+    loadQuestion();
+
+    // ─── LOAD QUESTION FUNCTION ─────────────────────────────────────────────────
+    function loadQuestion() {
+      answered = false;
+      nextButton.classList.remove('show');
+      const q = quizQuestions[currentQuestionIndex];
+      questionText.textContent = q.question;
+      optionsList.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.className = 'option-button';
+        btn.textContent = opt.text;
+        btn.dataset.correct = opt.correct;
+        btn.addEventListener('click', handleOptionClick);
+        li.appendChild(btn);
+        optionsList.appendChild(li);
+      });
+      updateProgressBar();
+      // Fade-in animation
+      questionCard.classList.remove('fade-in');
+      void questionCard.offsetWidth; // trigger reflow
+      questionCard.classList.add('fade-in');
+    }
+
+    // ─── HANDLE OPTION CLICK ────────────────────────────────────────────────────
+    function handleOptionClick(e) {
+      if (answered) return;
+      answered = true;
+      const selectedBtn = e.currentTarget;
+      const correct = selectedBtn.dataset.correct === 'true';
+
+      // Highlight selected and show correct/incorrect
+      Array.from(optionsList.children).forEach(li => {
+        const btn = li.firstChild;
+        btn.disabled = true;
+        if (btn.dataset.correct === 'true') {
+          btn.classList.add('correct');
+        } else {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      if (correct) {
+        score++;
+      }
+
+      // Show Next button after a short delay
+      setTimeout(() => {
+        nextButton.classList.add('show');
+      }, 500);
+    }
+
+    // ─── NEXT BUTTON CLICK ──────────────────────────────────────────────────────
+    nextButton.addEventListener('click', () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizQuestions.length) {
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    });
+
+    // ─── UPDATE PROGRESS BAR ─────────────────────────────────────────────────────
+    function updateProgressBar() {
+      const percent = ((currentQuestionIndex) / quizQuestions.length) * 100;
+      progressFill.style.width = `${percent}%`;
+    }
+
+    // ─── SHOW SCORE SCREEN ──────────────────────────────────────────────────────
+    function showScore() {
+      questionCard.style.display = 'none';
+      const percentScore = Math.round((score / quizQuestions.length) * 100);
+      scoreText.textContent = `You scored ${score} / ${quizQuestions.length} (${percentScore}%)`;
+      scoreScreen.style.display = 'block';
+    }
+
+    // ─── RETRY BUTTON ───────────────────────────────────────────────────────────
+    retryButton.addEventListener('click', () => {
+      currentQuestionIndex = 0;
+      score = 0;
+      scoreScreen.style.display = 'none';
+      questionCard.style.display = 'block';
+      loadQuestion();
+    });
+  </script>
+</body>
+</html>
