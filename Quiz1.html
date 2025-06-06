@@ -430,6 +430,10 @@
 
     // ─── UPDATE PROGRESS BAR ─────────────────────────────────────────────────────
     function updateProgressBar() {
+      
+      // Force the progress bar all the way to 100%
+  progressFill.style.width = '100%';
+      
       const percent = ((currentQuestionIndex) / quizQuestions.length) * 100;
       progressFill.style.width = `${percent}%`;
     }
