@@ -5,37 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Interactive Quiz – Grow Ops 101</title>
   <style>
-    /* ─── GLOBAL RESET & BASE STYLES ─────────────────────────────────────────── */
+    /* ─── GLOBAL RESET & BASE ─────────────────────────────────────────────────── */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     body {
-      background: linear-gradient(135deg, #e1f7e7, #d0f0de);
-      font-family: 'Quicksand', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: #000;
       overflow: hidden;
+      font-family: 'Quicksand', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
     }
+
+    /* ─── SMOKE BACKGROUND VIDEO ───────────────────────────────────────────────── */
+    #smoke-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -3;
+      opacity: 0.3;
+    }
+
+    /* ─── ANIMATED LEAVES ───────────────────────────────────────────────────────── */
+    .leaf {
+      position: fixed;
+      width: 60px;
+      opacity: 0.3;
+      animation: floatLeaf linear infinite;
+      transform-origin: center;
+    }
+    @keyframes floatLeaf {
+      0%   { transform: translateY(20px) rotate(0deg) scale(0.8); opacity: 0.4; }
+      50%  { transform: translateY(-20px) rotate(15deg) scale(1.0); opacity: 0.6; }
+      100% { transform: translateY(20px) rotate(0deg) scale(0.8); opacity: 0.4; }
+    }
+    .leaf:nth-child(1) {
+      top: 10%;
+      left: 15%;
+      animation-duration: 6s;
+      animation-delay: 0s;
+    }
+    .leaf:nth-child(2) {
+      top: 25%;
+      left: 75%;
+      animation-duration: 7s;
+      animation-delay: 1s;
+    }
+    .leaf:nth-child(3) {
+      top: 60%;
+      left: 30%;
+      animation-duration: 5.5s;
+      animation-delay: 0.5s;
+    }
+    .leaf:nth-child(4) {
+      top: 75%;
+      left: 80%;
+      animation-duration: 6.5s;
+      animation-delay: 1.2s;
+    }
+    .leaf img {
+      width: 100%;
+      height: auto;
+    }
+
+    /* ─── QUIZ CONTAINER ───────────────────────────────────────────────────────── */
     #quiz-container {
       position: relative;
       width: 360px;
       padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.85);
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
       text-align: center;
-      overflow: hidden;
+      z-index: 1;
+      backdrop-filter: blur(4px);
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
     }
     h1 {
       font-family: 'Orbitron', sans-serif;
       font-size: 1.5rem;
       color: #234d20;
       margin-bottom: 1rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
+
     /* ─── PROGRESS BAR ───────────────────────────────────────────────────────── */
     #progress-bar {
       width: 100%;
@@ -51,9 +112,14 @@
       background: #34a853;
       transition: width 0.5s ease;
     }
+
     /* ─── QUESTION CARD ──────────────────────────────────────────────────────── */
     .question-card {
-      animation: fadeIn 0.5s ease;
+      animation: cardFadeIn 0.5s ease;
+    }
+    @keyframes cardFadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
     .question-text {
       font-size: 1rem;
@@ -79,9 +145,25 @@
       font-size: 0.95rem;
       color: #234d20;
       transition: background 0.3s ease, transform 0.1s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .option-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(52, 168, 83, 0.2);
+      transform: skewX(-20deg);
+      transition: left 0.4s ease;
+      z-index: 0;
+    }
+    .option-button:hover::before {
+      left: 100%;
     }
     .option-button:hover {
-      background: #e1f7e7;
       transform: scale(1.02);
     }
     .option-button.correct {
@@ -94,6 +176,7 @@
       color: #fff;
       border-color: #c9302c;
     }
+
     /* ─── NEXT BUTTON ───────────────────────────────────────────────────────── */
     #next-button {
       display: inline-block;
@@ -107,6 +190,23 @@
       transition: background 0.3s ease, transform 0.1s ease;
       opacity: 0;
       pointer-events: none;
+      position: relative;
+      overflow: hidden;
+    }
+    #next-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: skewX(-20deg);
+      transition: left 0.4s ease;
+      z-index: 0;
+    }
+    #next-button:hover::before {
+      left: 100%;
     }
     #next-button:hover {
       background: #2c8e45;
@@ -117,6 +217,7 @@
       pointer-events: all;
       animation: fadeIn 0.5s ease;
     }
+
     /* ─── SCORE SCREEN ───────────────────────────────────────────────────────── */
     #score-screen {
       display: none;
@@ -126,6 +227,7 @@
       font-size: 1.2rem;
       color: #234d20;
       margin-bottom: 1rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
     #retry-button {
       padding: 0.6rem 1.2rem;
@@ -136,11 +238,29 @@
       cursor: pointer;
       font-size: 0.95rem;
       transition: background 0.3s ease, transform 0.1s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    #retry-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: skewX(-20deg);
+      transition: left 0.4s ease;
+      z-index: 0;
+    }
+    #retry-button:hover::before {
+      left: 100%;
     }
     #retry-button:hover {
       background: #2c8e45;
       transform: scale(1.02);
     }
+
     /* ─── ANIMATIONS ─────────────────────────────────────────────────────────── */
     @keyframes fadeIn {
       0% { opacity: 0; transform: translateY(10px); }
@@ -149,6 +269,18 @@
   </style>
 </head>
 <body>
+  <!-- Smoke Background -->
+  <video autoplay muted loop playsinline id="smoke-video">
+    <source src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4" type="video/mp4">
+  </video>
+
+  <!-- Floating Leaves -->
+  <div class="leaf"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" alt="Leaf"></div>
+  <div class="leaf"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" alt="Leaf"></div>
+  <div class="leaf"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" alt="Leaf"></div>
+  <div class="leaf"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Cannabis_leaf.svg/512px-Cannabis_leaf.svg.png" alt="Leaf"></div>
+
+  <!-- Quiz Container -->
   <div id="quiz-container">
     <h1>Grow Ops Quiz</h1>
 
@@ -219,7 +351,6 @@
           { text: "Blue", correct: false }
         ]
       }
-      // Add more questions if desired
     ];
 
     // ─── STATE & ELEMENTS ────────────────────────────────────────────────────────
@@ -247,7 +378,7 @@
       const q = quizQuestions[currentQuestionIndex];
       questionText.textContent = q.question;
       optionsList.innerHTML = '';
-      q.options.forEach((opt, idx) => {
+      q.options.forEach((opt) => {
         const li = document.createElement('li');
         const btn = document.createElement('button');
         btn.className = 'option-button';
@@ -258,10 +389,9 @@
         optionsList.appendChild(li);
       });
       updateProgressBar();
-      // Fade-in animation
-      questionCard.classList.remove('fade-in');
+      questionCard.classList.remove('question-card');
       void questionCard.offsetWidth; // trigger reflow
-      questionCard.classList.add('fade-in');
+      questionCard.classList.add('question-card');
     }
 
     // ─── HANDLE OPTION CLICK ────────────────────────────────────────────────────
@@ -271,7 +401,6 @@
       const selectedBtn = e.currentTarget;
       const correct = selectedBtn.dataset.correct === 'true';
 
-      // Highlight selected and show correct/incorrect
       Array.from(optionsList.children).forEach(li => {
         const btn = li.firstChild;
         btn.disabled = true;
@@ -286,10 +415,7 @@
         score++;
       }
 
-      // Show Next button after a short delay
-      setTimeout(() => {
-        nextButton.classList.add('show');
-      }, 500);
+      setTimeout(() => nextButton.classList.add('show'), 500);
     }
 
     // ─── NEXT BUTTON CLICK ──────────────────────────────────────────────────────
