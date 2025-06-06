@@ -429,17 +429,17 @@
     });
 
     // ─── UPDATE PROGRESS BAR ─────────────────────────────────────────────────────
-    function updateProgressBar() {
-      
-      // Force the progress bar all the way to 100%
-  progressFill.style.width = '100%';
-      
+    function updateProgressBar() {      
       const percent = ((currentQuestionIndex) / quizQuestions.length) * 100;
       progressFill.style.width = `${percent}%`;
     }
 
     // ─── SHOW SCORE SCREEN ──────────────────────────────────────────────────────
     function showScore() {
+
+           // Force the progress bar all the way to 100%
+  progressFill.style.width = '100%';
+      
       questionCard.style.display = 'none';
       const percentScore = Math.round((score / quizQuestions.length) * 100);
       scoreText.textContent = `You scored ${score} / ${quizQuestions.length} (${percentScore}%)`;
